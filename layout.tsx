@@ -31,23 +31,23 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "Vaibhav Samdani",
+      name: "Pallavi verma",
       url: "https://vaibhav-samdani.github.io/",
     },
   ],
-  creator: "Vaibhav Samdani",
+  creator: "Pallavi verma",
   openGraph: {
     title: "BillForge - Smart GST Invoice Generator",
     description:
       "Sleek and modern SaaS platform for generating compliant GST invoices with real-time previews and PDF export.",
     url: baseUrl,
-    siteName: "BillForge",
+    siteName: "GST-Invoice-Master",
     images: [
       {
         url: imageUrl,
         width: 1200,
         height: 630,
-        alt: "BillForge Banner Image",
+        alt: "GST Banner Image",
         type: "image/png",
       },
     ],
