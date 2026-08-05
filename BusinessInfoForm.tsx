@@ -66,7 +66,7 @@ export default function BusinessInfoForm() {
             type="text"
             value={business.phone}
             onChange={(e) => setBusiness({ phone: e.target.value })}
-            placeholder="98********"
+            placeholder="75********"
           />
         </div>
         <div>
