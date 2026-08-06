@@ -61,6 +61,7 @@ export default function ItemModal({ isOpen, onClose, item, isEdit = false }: Ite
     } else {
       // For new items, use addItemWithData function
       const newItem = {
+        id: '', // <-- FIX: Added blank ID to satisfy TypeScript. The store will generate a real one!
         ...formData,
         gst: gstToUse,
         amount,
