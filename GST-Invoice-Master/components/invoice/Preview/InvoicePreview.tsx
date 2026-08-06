@@ -1,6 +1,7 @@
 "use client";
 
-import useInvoiceStore, { useSafeInvoiceTotals } from "@/lib/store";
+import useSafeInvoiceTotals from "@/lib/store";
+import { useInvoiceStore } from "@/lib/store";
 import { InvoiceDoc } from "../Templates/Invoice";
 import { formatDate } from "@/lib/utils";
 import dynamic from "next/dynamic";
@@ -39,7 +40,7 @@ export default function InvoicePreview() {
           }
           fileName={`invoice-${invoiceNumber}-${client.name}.pdf`}
         >
-          {({  loading, }) =>
+          {({ loading }) =>
             loading ? "Loading document..." : "Download now!"
           }
         </PDFDownloadLink>
