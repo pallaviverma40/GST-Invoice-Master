@@ -1,7 +1,7 @@
 "use client";
 
-import useSafeInvoiceTotals from "@/lib/store";
-import { useInvoiceStore } from "@/lib/store";
+import useInvoiceStore from "@/lib/store";
+import { useSafeInvoiceTotals } from "@/lib/store";
 import { InvoiceDoc } from "../Templates/Invoice";
 import { formatDate } from "@/lib/utils";
 import dynamic from "next/dynamic";
@@ -11,7 +11,7 @@ export default function InvoicePreview() {
   const business = useInvoiceStore((state) => state.business);
   const client = useInvoiceStore((state) => state.client);
   const items = useInvoiceStore((state) => state.items);
-  const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber);
+  const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber) || "";
   const invoiceDate = useInvoiceStore((state) => state.invoiceDate);
 
   const totals = useSafeInvoiceTotals();
@@ -24,9 +24,11 @@ export default function InvoicePreview() {
     { ssr: false }
   );
 
+  const clientName = client?.name || "client";
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-4">
-      <Button>
+      <Button asChild>
         <PDFDownloadLink
           document={
             <InvoiceDoc
@@ -38,7 +40,7 @@ export default function InvoicePreview() {
               totals={totals}
             />
           }
-          fileName={`invoice-${invoiceNumber}-${client.name}.pdf`}
+          fileName={`invoice-${invoiceNumber}-${clientName}.pdf`}
         >
           {({ loading }) =>
             loading ? "Loading document..." : "Download now!"
