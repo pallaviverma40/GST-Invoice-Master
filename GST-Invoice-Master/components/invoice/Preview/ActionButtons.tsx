@@ -1,11 +1,12 @@
 'use client';
 import { Button } from "@/components/ui/button";
-import useInvoiceStore, { useSafeInvoiceTotals } from "@/lib/store";
+import useInvoiceStore from "@/lib/store";
 import { Share2, Mail, Printer } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ActionButtons() {
-  const totals = useSafeInvoiceTotals();
+  const calculateTotals = useInvoiceStore((state) => state.calculateTotals);
+  const totals = calculateTotals ? calculateTotals() : { total: 0 };
   const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber);
   const business = useInvoiceStore((state) => state.business);
   const client = useInvoiceStore((state) => state.client);
@@ -83,8 +84,6 @@ export default function ActionButtons() {
       >
         <Printer className="mr-2 h-4 w-4 text-purple-600" /> Print
       </Button>
-
-      
     </div>
   );
 }
