@@ -1,8 +1,9 @@
 "use client";
+
 import useInvoiceStore from "@/lib/store";
 import { ToWords } from "to-words";
 
-const toWords = new ToWords({
+const towords = new ToWords({
   localeCode: "en-IN",
   converterOptions: {
     currency: true,
@@ -15,7 +16,7 @@ const toWords = new ToWords({
       symbol: "₹",
       fractionalUnit: {
         name: "Paisa",
-        plural: "Paise",
+        plural: "Paisa",
         symbol: "",
       },
     },
@@ -23,69 +24,20 @@ const toWords = new ToWords({
 });
 
 export default function InvoiceSummary() {
-  const totals = useInvoiceStore((state) => state.totals);
-  const totalInWords = toWords.convert(totals.total).replace(/rupees/gi, "Rupees").replace(/paisa/gi, "Paise");
+  const totals = useInvoiceStore((state) => state.totals) || { total: 0 };
+  const numericTotal = totals.total || 0;
+  
+  const totalInWords = numericTotal > 0 ? towords.convert(numericTotal) : "Zero Rupees Only";
 
   return (
-    <div className="notion-style">
-      <h2 className="notion-header">Invoice Summary</h2>
-      <div className="space-y-2 sm:space-y-3">
-        <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-          <span>Subtotal:</span>
-          <span className="font-medium text-gray-800">
-            ₹{totals.subtotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-          </span>
-        </div>
-        
-        {totals.igst > 0 ? (
-          <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-            <span>IGST:</span>
-            <span className="font-medium text-gray-800">
-              ₹{totals.igst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-            </span>
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-              <span>CGST:</span>
-              <span className="font-medium text-gray-800">
-                ₹{totals.cgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </span>
-            </div>
-            <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-              <span>SGST:</span>
-              <span className="font-medium text-gray-800">
-                ₹{totals.sgst.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-              </span>
-            </div>
-          </>
-        )}
-        
-        <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-          <span>Round Off:</span>
-          <span className="font-medium text-gray-800">
-            ₹{totals.round_off.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-          </span>
-        </div>
-        
-        <hr className="my-2" />
-        
-        <div className="flex justify-between items-center font-bold text-base sm:text-lg text-gray-900">
-          <span>Net Total:</span>
-          <span>₹{totals.total.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-        </div>
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-3">
+      <h3 className="font-semibold text-gray-700">Amount Summary</h3>
+      <div className="flex justify-between text-sm">
+        <span>Subtotal / Total:</span>
+        <span className="font-bold">₹{numericTotal.toFixed(2)}</span>
       </div>
-      
-      <div className="mt-4 sm:mt-6">
-        <label className="form-label text-xs sm:text-sm" htmlFor="totalInWords">Total (in words):</label>
-        <input
-          className="form-input text-xs sm:text-sm"
-          id="totalInWords"
-          type="text"
-          value={totalInWords}
-          readOnly
-          style={{ backgroundColor: "#f9fafb" }}
-        />
+      <div className="text-xs text-gray-500 italic">
+        {totalInWords}
       </div>
     </div>
   );
