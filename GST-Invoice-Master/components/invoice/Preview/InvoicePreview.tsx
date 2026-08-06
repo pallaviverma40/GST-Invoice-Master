@@ -1,7 +1,6 @@
 "use client";
 
-import useInvoiceStore from "@/lib/store";
-import { useSafeInvoiceTotals } from "@/lib/store";
+import useInvoiceStore, { useSafeInvoiceTotals } from "@/lib/store";
 import { InvoiceDoc } from "../Templates/Invoice";
 import { formatDate } from "@/lib/utils";
 import dynamic from "next/dynamic";
