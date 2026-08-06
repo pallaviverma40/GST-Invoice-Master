@@ -80,6 +80,9 @@ interface InvoiceStore {
   addItem: (item: LineItem) => void;
   addItemWithData: (item: LineItem) => void;
   removeItem: (id: string) => void;
+  
+  // --- ADDED: Type definition for updateItem ---
+  updateItem: (id: string, updatedItem: Partial<LineItem>) => void;
 
   invoiceNumber: string;
   setInvoiceNumber: (num: string) => void;
@@ -137,6 +140,14 @@ const useInvoiceStore = create<InvoiceStore>((set) => ({
   
   removeItem: (id) => set((state) => {
     const newItems = state.items.filter((i) => i.id !== id);
+    return { items: newItems, totals: calculateTotals(newItems) };
+  }),
+
+  // --- ADDED: Implementation for updateItem ---
+  updateItem: (id, updatedItem) => set((state) => {
+    const newItems = state.items.map((item) =>
+      item.id === id ? { ...item, ...updatedItem } : item
+    );
     return { items: newItems, totals: calculateTotals(newItems) };
   }),
 
