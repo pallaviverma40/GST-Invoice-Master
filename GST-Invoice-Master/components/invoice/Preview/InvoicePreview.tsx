@@ -1,17 +1,17 @@
 "use client";
 
-import useInvoiceStore, { useSafeInvoiceTotals } from "@/lib/store";
+import useSafeInvoiceTotals from "@/lib/store";
 import { InvoiceDoc } from "../Templates/Invoice";
 import { formatDate } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { Button } from "../../ui/button";
 
 export default function InvoicePreview() {
-  const business = useInvoiceStore((state) => state.business);
-  const client = useInvoiceStore((state) => state.client);
-  const items = useInvoiceStore((state) => state.items);
-  const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber) || "";
-  const invoiceDate = useInvoiceStore((state) => state.invoiceDate);
+  const business = useSafeInvoiceTotals((state) => state.business);
+  const client = useSafeInvoiceTotals((state) => state.client);
+  const items = useSafeInvoiceTotals((state) => state.items);
+  const invoiceNumber = useSafeInvoiceTotals((state) => state.invoiceNumber) || "";
+  const invoiceDate = useSafeInvoiceTotals((state) => state.invoiceDate);
 
   const totals = useSafeInvoiceTotals();
 
