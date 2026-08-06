@@ -1,12 +1,10 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import useInvoiceStore from "@/lib/store";
-import { Share2, Mail, Printer } from "lucide-react";
+import { Share2, Mail } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ActionButtons() {
-  const calculateTotals = useInvoiceStore((state) => state.calculateTotals);
-  const totals = calculateTotals ? calculateTotals() : { total: 0 };
   const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber) || "";
   const items = useInvoiceStore((state) => state.items) || [];
   const business = useInvoiceStore((state) => state.business);
@@ -33,7 +31,7 @@ export default function ActionButtons() {
       const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank");
       toast.info("WhatsApp opened");
-    } catch (error) {
+    } catch {
       toast.error("Failed to open WhatsApp");
     }
   };
@@ -52,7 +50,7 @@ export default function ActionButtons() {
         subject
       )}&body=${encodeURIComponent(body)}`;
       toast.info("Email client opened");
-    } catch (error) {
+    } catch {
       toast.error("Failed to open email client");
     }
   };
