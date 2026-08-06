@@ -5,18 +5,28 @@ import { Share2, Mail, Printer } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ActionButtons() {
-  const calculateTotals = useInvoiceStore((state) => state.calculateTotals);
-  const totals = calculateTotals ? calculateTotals() : { total: 0 };
-  const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber);
+  const items = useInvoiceStore((state) => state.items) || [];
+  const invoiceNumber = useInvoiceStore((state) => state.invoiceNumber) || "";
   const business = useInvoiceStore((state) => state.business);
   const client = useInvoiceStore((state) => state.client);
+
+  // Compute total amount directly from items
+  const totalAmount = items.reduce((sum, item) => {
+    const amount = item.amount || (item.quantity * item.rate) || 0;
+    const gst = item.gst || 0;
+    return sum + amount + (amount * gst) / 100;
+  }, 0);
+
+  const businessName = business?.name || "Business";
+  const clientName = client?.name || "Valued Customer";
+  const clientEmail = client?.email || "";
 
   const shareViaWhatsApp = () => {
     try {
       const message =
-        `*Invoice ${invoiceNumber} from ${business.name}*\n\n` +
-        `*To:* ${client.name}\n` +
-        `*Total Amount:* ₹${totals.total.toFixed(2)}\n` ;
+        `*Invoice ${invoiceNumber} from ${businessName}*\n\n` +
+        `*To:* ${clientName}\n` +
+        `*Total Amount:* ₹${totalAmount.toFixed(2)}\n`;
 
       const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank");
@@ -29,19 +39,17 @@ export default function ActionButtons() {
 
   const shareViaEmail = () => {
     try {
-      const subject = `Invoice ${invoiceNumber} from ${business.name}`;
+      const subject = `Invoice ${invoiceNumber} from ${businessName}`;
       const body =
-        `Dear ${client.name},\n\n` +
+        `Dear ${clientName},\n\n` +
         `Please find your invoice details:\n` +
         `- Invoice Number: ${invoiceNumber}\n` +
-        `- Total Amount: ₹${totals.total.toFixed(2)}\n` +
-        `Best regards,\n${business.name}`;
+        `- Total Amount: ₹${totalAmount.toFixed(2)}\n\n` +
+        `Best regards,\n${businessName}`;
 
-      window.location.href = `mailto:${
-        client.email || ""
-      }?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-        body
-      )}`;
+      window.location.href = `mailto:${clientEmail}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
       toast.info("Email client opened");
     } catch (error) {
       toast.error("Failed to open email client");
